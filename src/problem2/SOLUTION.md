@@ -1,5 +1,7 @@
 
-![Trading Platform Architecture Diagram](./architecture-diagram.png)
+<img width="1919" height="1123" alt="Screenshot 2026-04-15 at 19 40 40" src="https://github.com/user-attachments/assets/451ed9b3-40db-4108-80eb-0ae510db5ee5" />
+
+
 
 ## 1. Architecture:
 - Microservice-based, event-driven trading platform
@@ -11,7 +13,7 @@
 | --- | --- | --- |
 | Route 53 | DNS with healthcheck and latency-based routing | Cloudflare DNS |
 | CloudFront | Caching at edge for static files. Can be integrated with WAF and Shield for better protection | Akamai |
-| AWS WAF | Web firewall, blocking common web (SQL injection, XSS, bot traffic...) | Cloudflare WAF |
+| AWS WAF | Web firewall, blocking common web (SQL injection, XSS, bot traffic...). Sits in front of API gateway to filter the malicious traffics | Cloudflare WAF |
 | AWS Shield | DDoS protection | Cloudflare Spectrum |
 | ACM | SSL/TLS certificate management | Let's Encrypt |
 | Cognito | User authentication, authorization, and identity management |  |
@@ -89,12 +91,6 @@
     - Increase Kafka brokers to handle 10x throughput; partition topics by symbol or region.
     - Cluster ElastiCache across regions; use Redis replication for failover.
  
-  - **Cost Optimization at Scale**:
-    - Use Reserved Capacity for all critical services (RDS, Kafka, DynamoDB).
-    - Scale down during off-peak
-    - Use AWS Compute Savings Plans for EKS nodes.
-    - Use Spot Instances for non-critical workloads via Karpenter.
-    - Set budgets in CloudWatch; optimize S3 storage classes.
 
 ### Recovery and Failover
 - Multi-AZ deployment for EKS, RDS, ElastiCache.
@@ -104,3 +100,10 @@
 - CodeDeploy blue/green deployments for zero-downtime updates.
 - Aurora failover in <30s; DynamoDB global tables for cross-region sync.
 
+### Cost Optimization:
+- Use Reserved Capacity for all critical services (RDS, Kafka, DynamoDB).
+- Scale down during off-peak
+- Use AWS Compute Savings Plans for EKS nodes.
+- Use Spot Instances for non-critical workloads via Karpenter.
+- Set budgets in CloudWatch; optimize S3 storage classes.
+- Consider moving to opensource solution for CICD or obsevasion services like: ELK, prometheus, grafana, Jenkins, GitlabCI...
